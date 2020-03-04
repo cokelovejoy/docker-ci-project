@@ -1,0 +1,30 @@
+version: '3.1'
+services:
+  app-pm2:
+      container_name: app-pm2
+      #构建容器
+      build: ./backend
+      ports:
+        - "3000:3000"
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+  mongo-express:
+    image: mongo-express
+    restart: always 
+    ports:
+      - 8081:8081
+  nginx:
+    restart: always
+    image: nginx
+    ports:
+      - 8091:80
+    volumes:
+      # 将主机nginx的配置文件 挂载到 nginx镜像的目录下
+      - ./nginx/conf.d/:/etc/nginx/conf.d 
+      # 将主机前端代码 挂载 到 nginx镜像目录下
+      - ./frontend/dist:/var/www/html/
+      # 将主机静态文件目录 挂载到nginx镜像的目录下
+      - ./static/:/static/
